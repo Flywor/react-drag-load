@@ -6,72 +6,68 @@ const helper = require('./helper');
 const cfg = require('../app.config');
 
 const extractCSS = new ExtractTextPlugin({
-  filename: 'css/[name].[contenthash:5].css',
-  allChunks: true,
+  filename: 'dragload.css'
 });
 
 module.exports = {
-  context: path.resolve(__dirname, '../'),
+  context: path.resolve(__dirname, '../src/'),
+  entry: {
+    dragload: './index'
+  },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  entry: helper.createCommonEntry(cfg.html),
   output: {
     path: path.resolve(__dirname, '../dist'),
-    publicPath: './',
-    filename: 'js/[name].[chunkhash:5].js',
+    library: 'dragload',
+    libraryTarget: 'umd',
+    filename: '[name].js'
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: JSON.stringify('production') },
-      DEBUG: false,
-    }),
-    new webpack.LoaderOptionsPlugin({ debug: false, minimize: true }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' }),
-    ...helper.createHtmlPlugins(cfg.html),
-    new HtmlWebpackAssetPlugin(),
-    extractCSS,
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-      comments: false,
-    }),
+    extractCSS
   ],
   module: {
     rules: [
       {
-        test: /\.css/,
-        loaders: ['style-loader', 'css-loader'],
+        test: /\.jsx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+        exclude: /node_modules/,
       },
       {
-        test: /\.jsx?$/, // 通过正则匹配js,jsx文件
-        loader: 'babel-loader',
-        exclude: /node_modules/, // 跳过 node_modules 目录
-        include: path.resolve(__dirname, '../src'),
-        query: {
-          cacheDirectory: true,
-        },
-      },
-      {
-        test: /\.scss$/,
-        exclude: path.resolve(__dirname, '../src/css'),  // 非src/css下的scss开启局部样式模式
+        test: /\.scss/,
         use: extractCSS.extract({
+          fallback: 'style-loader',
           use: [
-            'css-loader?minimize&modules&&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-            'postcss-loader',
-            'sass-loader',
-          ],
-          publicPath: '../',
-        }),
-      },
-      {
-        test: /\.scss$/,
-        include: path.resolve(__dirname, '../src/css'),
-        use: extractCSS.extract({
-          use: ['css-loader?minimize', 'postcss-loader', 'sass-loader'],
-          publicPath: '../',
-        }),
-      },
+            { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
+            { loader: 'sass-loader', options: { sourceMap: true } }
+          ]
+        })
+      }
     ],
   },
+  externals: {
+    react: {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react'
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom'
+    },
+    'prop-types': {
+      root: 'PropTypes',
+      commonjs2: 'prop-types',
+      commonjs: 'prop-types',
+      amd: 'prop-types'
+    }
+  }
 };
