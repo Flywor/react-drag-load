@@ -7,16 +7,16 @@
       height: 100%;
       overflow-y: scroll;
       .noData{
-        padding: 3rem;
-        font-size: 1.5rem;
+        padding: 30px;
+        font-size: 15px;
         text-align: center;
         color: grey;
       }
     }
     .refresh, .loadNext{
-      height: 5rem;
+      height: 50px;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 15px;
       display: flex;
       align-items: center;
       color: grey;
@@ -25,7 +25,7 @@
         span{
           display: inline-block;
           transition: transform .3s;        
-          margin-right: 1rem;
+          margin-right: 10px;
           vertical-align: middle;
         }
         label{
@@ -34,7 +34,7 @@
       }
     }
     .refresh{
-      margin-top: -5rem;
+      margin-top: -50px;
       span{
         &:before{
           content: '↓'
@@ -42,7 +42,7 @@
       }
     }
     .loadNext{
-      margin-bottom: -5rem;
+      margin-bottom: -50px;
       span{
         &:before{
           content: '↑'

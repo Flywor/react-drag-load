@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DragLoad from './components/dragload/drag.jsx';
-import './demo.scss';
+
 export default class Demo extends Component {
     state = {
         data: [],
