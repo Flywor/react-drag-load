@@ -1,13 +1,21 @@
 {
-  "name": "ex",
-  "version": "0.0.0",
-  "description": "",
-  "homepage": "",
-  "author": {
-    "name": "",
-    "email": "",
-    "url": ""
+  "name": "@Flywor/DragLoad",
+  "version": "1.0.0",
+  "description": "a react component supporting DataList drag to load",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Flywor/DragLoad.git"
   },
+  "keywords": [
+    "drag",
+    "react"
+  ],
+  "author": "hy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Flywor/DragLoad/issues"
+  },
+  "homepage": "https://github.com/Flywor/DragLoad.git",
   "main": "index.js",
   "scripts": {
     "precommit": "npm run precheck",
@@ -69,6 +77,4 @@
     "webpack-dev-server": "^2.4.5",
     "webpack-merge": "^4.1.0"
   },
-  "repository": "",
-  "license": "MIT"
 }
