@@ -1,7 +1,7 @@
 {
-  "name": "@Flywor/DragLoad",
+  "name": "flywor-dragload",
   "version": "1.0.0",
-  "description": "a react component supporting DataList drag to load",
+  "description": "a react component supporting data list drag to load",
   "repository": {
     "type": "git",
     "url": "https://github.com/Flywor/DragLoad.git"
@@ -76,5 +76,5 @@
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5",
     "webpack-merge": "^4.1.0"
-  },
+  }
 }
