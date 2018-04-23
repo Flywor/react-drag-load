@@ -1,6 +1,6 @@
 {
   "name": "flywor-dragload",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "a react component supporting data list drag to load",
   "repository": {
     "type": "git",

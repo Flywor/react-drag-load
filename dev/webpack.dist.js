@@ -1,29 +1,37 @@
 const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackAssetPlugin = require('html-asset-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const helper = require('./helper');
 const cfg = require('../app.config');
 
 const extractCSS = new ExtractTextPlugin({
-  filename: 'dragload.css'
+  filename: 'index.css'
 });
 
 module.exports = {
   context: path.resolve(__dirname, '../src/'),
   entry: {
-    dragload: './index'
+    index: './index'
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    library: 'dragload',
+    path: path.resolve(__dirname, '../publish'),
+    library: 'index',
     libraryTarget: 'umd',
-    filename: '[name].js'
+    filename: 'index.js'
   },
   plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      comments: false,
+    }),
+    new CopyWebpackPlugin([
+      { from: '../package.json', to: 'package.json' },
+      { from: '../README.md', to: 'README.md' },
+    ].concat(cfg.copyFile)),
     extractCSS
   ],
   module: {
