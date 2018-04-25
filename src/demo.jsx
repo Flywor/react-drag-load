@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import DragLoad from './components/dragload/drag.jsx';
-
-export default class Demo extends Component {
+import ReactDOM from 'react-dom';
+import DragLoad from './index';
+import './include/main.scss';
+import './include/vconsole.min.js';
+class Demo extends Component {
     state = {
         data: [],
-        limit: 15,
+        limit: 40,
     }
     api = {
         baseUrl: 'https://cnodejs.org/api/v1/',
         home: 'topics',
-    }
-
-    componentWillMount() {
-        this.refresh();
     }
 
     refresh() {
@@ -20,7 +18,7 @@ export default class Demo extends Component {
             this.setState({
                 data: rs.data,
                 page: 1
-            })
+            });
         });
     }
 
@@ -45,18 +43,23 @@ export default class Demo extends Component {
     render() {
         const { data } = this.state;
         return (
-            <div styleName="demo">
-                <DragLoad
-                    refresh={this.refresh.bind(this)}
-                    loadNext={this.loadNext.bind(this)}
-                >
-                    <ul>
-                        {data.map(d => (
-                            <li key={`${d.id}${d.author_id}`}>{d.title}</li>
-                        ))}
-                    </ul>
-                </DragLoad>
+            <div>
+                <div style={{ fontSize: '14px' }}>
+                    <DragLoad
+                        height={`${window.screen.height}px`}
+                        refresh={this.refresh.bind(this)}
+                        loadNext={this.loadNext.bind(this)}
+                    >
+                        <ul>
+                            {data.map(d => (
+                                <li key={`${d.id}${d.author_id}`} style={{ padding: '8px' }}>{d.title}</li>
+                            ))}
+                        </ul>
+                    </DragLoad>
+                </div>
             </div>
         )
     }
 }
+
+ReactDOM.render(<Demo />, document.getElementById('root'));

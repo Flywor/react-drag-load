@@ -10,10 +10,7 @@ function createCommonEntry(cfg) {
 }
 
 const et = (index) => [
-  'react-hot-loader/patch',
-  'webpack-dev-server/client',
-  'webpack/hot/only-dev-server',
-  'react-hot-loader',
+  'babel-polyfill',
   index,
 ];
 

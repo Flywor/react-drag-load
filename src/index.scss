@@ -1,53 +1,85 @@
-.dragload{
-  height: 100%;
-  overflow: hidden;
-  .drag{
-    height: 100%;
-    .items{
-      height: 100%;
-      overflow-y: scroll;
-      .noData{
-        padding: 30px;
-        font-size: 15px;
-        text-align: center;
-        color: grey;
+.drag{
+  position: relative;
+  .items{
+    overflow-y: scroll;
+  }
+  .refresh, .loadNext{
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 15px;
+    color: grey;
+    span{
+      display: inline-block;
+      transition: transform .3s;        
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    label{
+      vertical-align: middle;
+    }
+  }
+  .refresh{
+    position: absolute;
+    top: -40px;
+    width: 100%;
+    left: 0;
+    span{
+      &:before{
+        content: '↓'
       }
     }
-    .refresh, .loadNext{
-      height: 50px;
-      text-align: center;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      color: grey;
-      div{
-        flex: 1;
-        span{
-          display: inline-block;
-          transition: transform .3s;        
-          margin-right: 10px;
-          vertical-align: middle;
-        }
-        label{
-          vertical-align: middle;
-        }
+  }
+  .loading:before {
+      content: ''!important;
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid;
+      border-radius: 50%;
+      border-color: #999 transparent transparent transparent;
+      animation: loadingCircle 1s infinite linear;
+  }
+  @keyframes loadingCircle {
+      0% {
+          transform: rotate(0deg);
       }
-    }
-    .refresh{
-      margin-top: -50px;
-      span{
-        &:before{
-          content: '↓'
-        }
+      100% {
+          transform: rotate(360deg);
       }
-    }
-    .loadNext{
-      margin-bottom: -50px;
-      span{
-        &:before{
-          content: '↑'
-        }
-      }
-    }
+  }
+  .success {
+      width: 2rem;
+      height: 1rem;
+  }
+  .success:before {
+      content: ''!important;
+      display: block;
+      width: 90%;
+      height: 90%;
+      border-bottom: 1px solid #999;
+      border-left: 1px solid #999;
+      transform: rotate(-45deg);
+  }
+  .error:before {
+      content: ''!important;
+  }
+  .hide{
+    // opacity: 0!important;
+  }
+  .toTop{
+    opacity: 1;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    height: 50px;
+    line-height: 50px;
+    width: 50px;
+    text-align: center;
+    color: #fff;
+    border-radius: 10%;
+    background: lightsalmon;
+    transition: opacity .3s;
+    z-index: 99;
   }
 }

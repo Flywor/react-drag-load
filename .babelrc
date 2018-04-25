@@ -1,5 +1,19 @@
 { 
   "presets": [ 
+    [
+      "env",
+      {
+        "targets": {
+          "chrome": 52,
+          "browsers": [
+            "iOS >= 7",
+            "Android >= 4.4"
+          ]
+        },
+        "modules": false,
+        "useBuiltIns": true
+      }
+    ],
     "es2015" , 
     "react",
     "stage-2"

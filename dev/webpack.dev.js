@@ -5,6 +5,13 @@ const helper = require('./helper');
 const cfg = require('../app.config');
 const { port, host } = cfg.server;
 
+cfg.html = [
+  {
+    name: 'index',
+    entry: './src/demo',
+  },
+];
+
 module.exports = {
   devtool: 'eval',
   // devtool: 'source-map',
@@ -27,7 +34,6 @@ module.exports = {
       DEBUG: true,
     }),
     new webpack.LoaderOptionsPlugin({ debug: true, minimize: false }),
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' }),
     ...helper.createHtmlPlugins(cfg.html),

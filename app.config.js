@@ -6,7 +6,6 @@ const config = {
     port: 8000,
   },
   copyFile: [
-    // { from: './single_part', to: './' },
   ],
   html: [
     /*

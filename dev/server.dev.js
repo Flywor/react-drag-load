@@ -9,14 +9,12 @@ var getProcessForPort = require('react-dev-utils/getProcessForPort');
 var prompt = require('react-dev-utils/prompt');
 
 let { port, host } = appConfig.server;
-
 try {
   const compiler = webpack(config);
 
   const server = new WebpackDevServer(compiler, {
     contentBase: path.resolve(__dirname, '../'),
     historyApiFallback: true,
-    hot: true,
     inline: true,
     stats: {
       colors: true,
