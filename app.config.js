@@ -3,7 +3,7 @@ const ip = require('ip').address();
 const config = {
   server: {
     host: ip,
-    port: 8000,
+    port: 8004,
   },
   copyFile: [
   ],
@@ -19,7 +19,7 @@ const config = {
     {
       name: 'index',
       title: '',
-      entry: './src/index',
+      entry: './debug/demo',
       scripts: [
       ],
     },

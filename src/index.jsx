@@ -1,18 +1,20 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import './index.scss';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import './index.scss'
 
 export default class Index extends Component {
   static propTypes = {
     height: PropTypes.string.isRequired,
-    refresh: PropTypes.func,
-    loadNext: PropTypes.func,
-  };
+    refresh: PropTypes.func, // 下拉刷新方法(return Promise)
+    loadNext: PropTypes.func, // 滚动加载方法(return Promise)
+    scrollRate: PropTypes.number, // 拉动速率
+  }
   static defaultProps = {
     height: '',
     refresh: null,
     loadNext: null,
-  };
+    scrollRate: 0.3
+  }
   state = {
     dragY: 0,
     dragTransition: '',
@@ -24,7 +26,6 @@ export default class Index extends Component {
     showToTop: false, // 标记‘返回顶部’按钮的显示
   }
   maxOver = 50  // 触发下拉刷新操作的临界值(单位px)
-  scrollRate = 0.5 // 拉动速率
   tStart = 0 // 起点
   loadFlag = false // 标记加载状态 避免重复拉动加载
   refreshFlag = false // 标记是否触发下拉刷新
@@ -35,7 +36,7 @@ export default class Index extends Component {
 
   componentDidMount(){
     const { refresh } = this.props
-    'function' === typeof refresh && refresh();
+    'function' === typeof refresh && refresh()
     const { drag, start, move, end } = this
     drag.addEventListener('touchstart', start.bind(this), { passive: false })
     drag.addEventListener('touchmove', move.bind(this), {passive: false })
@@ -46,36 +47,36 @@ export default class Index extends Component {
     this.scrollFlag = false
     const { child, loadFlag, props, nextFlag } = this
     if('function' === typeof props.loadNext && !loadFlag && nextFlag && (child.scrollHeight - child.offsetHeight) * .9 < child.scrollTop){
-      this.loadFlag = true;
+      this.loadFlag = true
       this.setState({
         loadNextIcon: 'loading',
         loadNextTxt: '加载中...'
-      });
+      })
       props.loadNext().then(rs => {
         this.setState({
-          loadNextIcon: 'success',
+          loadNextIcon: '',
           loadNextTxt: '加载成功'
-        });
+        })
       }).catch(e=>{
         // 失败处理
         this.setState({
           loadNextIcon: 'error',
           loadNextTxt: '加载失败'
-        });
+        })
         this.nextFlag = false // 关闭滚动加载，防止一直报错
         console.error(e)
       }).finally(r=>{
         this.loadFlag = false
-      });
+      })
     }
     this.setState({
       showToTop: child.scrollTop > child.offsetHeight
-    });
+    })
   }
 
   start (e) {
     const { loadFlag, drag, tStart, child, toTopTimer } = this
-    clearInterval(toTopTimer);
+    clearInterval(toTopTimer)
     if (loadFlag) {
       // 阻止浏览器默认事件可以使加载的时候无法滑动
       // e.preventDefault()
@@ -87,21 +88,24 @@ export default class Index extends Component {
     this.setState({
       refreshIcon: '',
       dragTransition: 'none',
-    });
+    })
     this.tStart = e.touches[0].clientY
   }
 
   move (e) {
     const { 
-      loadFlag, maxOver, scrollRate, tStart, scrollFlag, child, haveData
+      loadFlag, maxOver, tStart, scrollFlag, child, haveData
     } = this
+    const {
+      scrollRate
+    } = this.props
     if (loadFlag || !haveData) {
       // e.preventDefault()
       return
     }
     if (child.scrollTop === 0) { // 顶部下拉
       if(!scrollFlag) {
-        this.start(e);
+        this.start(e)
       } else {
         const tPosition = (tStart - e.touches[0].clientY) * scrollRate
         if (tPosition < 0) {
@@ -111,87 +115,87 @@ export default class Index extends Component {
             refreshDeg: `rotate(${this.refreshFlag? 180 : 0 }deg)`,
             refreshTxt: this.refreshFlag? '释放更新': '下拉刷新',
             dragY: Math.abs(tPosition)
-          });
+          })
         } else {
           this.refreshFlag = false
         }
       }
     } else {
-      this.refreshFlag = false;
+      this.refreshFlag = false
     }
   }
 
   end (e) {
     const { 
       maxOver, loadFlag, drag, refreshFlag
-    } = this;
-    const { refresh } = this.props;
+    } = this
+    const { refresh } = this.props
     if (loadFlag) {
-      e.preventDefault();
-      return;
+      e.preventDefault()
+      return
     }
     this.setState({
       dragTransition: '330ms'
-    });
+    })
     if (refreshFlag && typeof refresh === 'function') {
-      this.refreshFlag = false;
+      this.refreshFlag = false
       this.setState({
         dragY: maxOver,
         refreshIcon: 'loading',
         refreshTxt: '加载中',
         refreshDeg: 'rotate(0deg)'
-      });
+      })
       refresh().then(rs => {
         this.setState({
           refreshIcon: 'success',
           refreshTxt: '加载成功'
-        });
+        })
       }).catch(e=>{
         // 失败处理
         this.setState({
           refreshIcon: 'error',
           refreshTxt: '加载失败'
-        });
+        })
         console.error(e)
       }).finally(r=>{
         setTimeout(() => {
           this.setState({
             dragY: 0,
-          });
+          })
           setTimeout(() => {
             this.setState({
               dragTransition: 'none'
-            });
+            })
             this.loadFlag = false
-          }, 330);
-        }, 1000);
-      });
+          }, 330)
+        }, 1000)
+      })
     } else {
       this.setState({
         dragY: 0,
-      });
+      })
     }
-    return true;
+    return true
   }
 
   toTop(){
     const { child } = this
     this.toTopTimer = setInterval(() => {
-      child.scrollTop = child.scrollTop * .99;
+      child.scrollTop = child.scrollTop * .99
       if (child.scrollTop <= 1) {
-        child.scrollTop = 0;
-        clearInterval(this.toTopTimer);
-      };
-    }, 1);
+        child.scrollTop = 0
+        clearInterval(this.toTopTimer)
+      }
+    }, 1)
   }
   
   render() {
     const {
       dragY, dragTransition, refreshIcon, refreshTxt, refreshDeg, loadNextIcon, loadNextTxt, showToTop
-    } = this.state;
-    const { height, refresh, loadNext, children } = this.props;
-    const length =  children.props ? children.props.children.length: children.length;
-    this.haveData = length > 0;
+    } = this.state
+    const { height, refresh, loadNext, children } = this.props
+    const length =  children.props ? children.props.children.length: children.length
+    this.haveData = length > 0
     return (
       <div
         styleName="drag"
@@ -217,6 +221,6 @@ export default class Index extends Component {
         </div>
         <div styleName={`${showToTop ? '': 'hide'} toTop`} onClick={this.toTop.bind(this)}>TOP</div>
       </div>
-    );
+    )
   }
 }

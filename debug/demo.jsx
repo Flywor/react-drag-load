@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import DragLoad from './index';
+
+import DragLoad from 'flywor-dragload';
+import 'flywor-dragload/index.css';
+
+// import DragLoad from '../publish/index';
+// import '../publish/index.css';
+
 import './include/main.scss';
-import './include/vconsole.min.js';
+
 class Demo extends Component {
     state = {
         data: [],

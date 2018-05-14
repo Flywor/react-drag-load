@@ -4,18 +4,17 @@ const config = require('./webpack.dev');
 const appConfig = require('../app.config');
 const chalk = require('chalk');
 const path = require('path');
-const openBrowser = require('react-dev-utils/openBrowser');
-var getProcessForPort = require('react-dev-utils/getProcessForPort');
-var prompt = require('react-dev-utils/prompt');
 
 let { port, host } = appConfig.server;
+
 try {
   const compiler = webpack(config);
 
   const server = new WebpackDevServer(compiler, {
     contentBase: path.resolve(__dirname, '../'),
+    compress: true,
     historyApiFallback: true,
-    inline: true,
+    hot: true,
     stats: {
       colors: true,
       assets: false,
@@ -24,14 +23,13 @@ try {
       hash: false,
       version: false,
       chunkModules: false,
-      chunkOrigins: true,
+      chunkOrigins: false,
     },
   });
 
   server.listen(port, host, () => {
     const url = `http://${host}:${port}`;
     console.log(chalk.green(`Dev server listening on ${url} ...`));
-    // openBrowser(`${url}/home.html`);
   });
 } catch (e) {
   console.log(chalk.red(`The following error has ocurred: ${e}`));

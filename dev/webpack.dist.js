@@ -1,63 +1,64 @@
-const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const helper = require('./helper');
-const cfg = require('../app.config');
 
 const extractCSS = new ExtractTextPlugin({
-  filename: 'index.css'
+  filename: 'index.css',
+  allChunks: true,
 });
 
 module.exports = {
-  context: path.resolve(__dirname, '../src/'),
-  entry: {
-    index: './index'
-  },
+  mode: 'production',
+  context: path.resolve(__dirname, '../'),
+  entry: ['./src/index'],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   output: {
     path: path.resolve(__dirname, '../publish'),
-    library: 'index',
     libraryTarget: 'umd',
     filename: 'index.js'
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-      comments: false,
-    }),
-    new CopyWebpackPlugin([
-      { from: '../package.json', to: 'package.json' },
-      { from: '../README.md', to: 'README.md' },
-    ].concat(cfg.copyFile)),
-    extractCSS
-  ],
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-        ],
-        exclude: /node_modules/,
+        test: /\.css/,
+        loaders: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.scss/,
+        test: /\.jsx?$/, // 通过正则匹配js,jsx文件
+        loaders: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: false
+            }
+          }
+        ],
+        exclude: /node_modules/,
+        include: path.resolve(__dirname, '../src/'),
+      },
+      {
+        test: /\.scss$/,
+        include: path.resolve(__dirname, '../src/'),
         use: extractCSS.extract({
-          fallback: 'style-loader',
           use: [
-            { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
-            { loader: 'postcss-loader', options: { sourceMap: true } },
-            { loader: 'sass-loader', options: { sourceMap: true } }
-          ]
-        })
+            'css-loader?minimize&modules&&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+            'postcss-loader',
+            'sass-loader',
+          ],
+          publicPath: '../',
+        }),
       }
     ],
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: './package.json', to: 'package.json' },
+      { from: './README.md', to: 'README.md' },
+    ]),
+    extractCSS,
+  ],
   externals: {
     react: {
       root: 'React',
