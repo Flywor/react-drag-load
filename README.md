@@ -24,7 +24,3 @@ import 'flywor-dragload/index.css';
 </DragLoad>
 // ...
 ```
-
-## How does it work?
-
-It's powered by React portal in React 16, so it's only compatible with React 16
