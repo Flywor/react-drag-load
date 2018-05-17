@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import DragLoad from 'flywor-dragload';
-import 'flywor-dragload/index.css';
+// import DragLoad from 'flywor-dragload';
+// import 'flywor-dragload/index.css';
 
-// import DragLoad from '../publish/index';
-// import '../publish/index.css';
+import DragLoad from '../publish/index';
+import '../publish/index.css';
 
 import './include/main.scss';
 
@@ -53,8 +53,9 @@ class Demo extends Component {
                 <div style={{ fontSize: '14px' }}>
                     <DragLoad
                         height={`${window.screen.height}px`}
-                        refresh={this.refresh.bind(this)}
-                        loadNext={this.loadNext.bind(this)}
+                        refresh={() => this.refresh()}
+                        loadNext={() => this.loadNext()}
+                        parentClass="test"
                     >
                         <ul>
                             {data.map(d => (

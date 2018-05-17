@@ -8,12 +8,20 @@ export default class Index extends Component {
     refresh: PropTypes.func, // 下拉刷新方法(return Promise)
     loadNext: PropTypes.func, // 滚动加载方法(return Promise)
     pullRate: PropTypes.number, // 拉动速率
+    parentClass: PropTypes.string, // 样式定制
+    refreshClass: PropTypes.string, // 样式定制
+    loadNextClass: PropTypes.string, // 样式定制
+    toTopClass: PropTypes.string, // 样式定制
   }
   static defaultProps = {
-    height: '',
+    height: 0,
     refresh: null,
     loadNext: null,
-    pullRate: 0.3
+    pullRate: 0.3,
+    parentClass: '',
+    refreshClass: '',
+    loadNextClass: '',
+    toTopClass: '',
   }
   state = {
     dragY: 0,
@@ -31,7 +39,6 @@ export default class Index extends Component {
   refreshFlag = false // 标记是否触发下拉刷新
   nextFlag = true // 标记是否开启滚动加载
   scrollFlag = false // 标记是在滚动中，用于判断是否滚动到顶部，为true时才能触发下拉刷新
-  haveData = true // 限制调用获取数据方法
   toTopTimer = 0 // 返回顶部的滚动条帧
 
   componentDidMount(){
@@ -39,7 +46,7 @@ export default class Index extends Component {
     'function' === typeof refresh && refresh()
     const { drag, start, move, end } = this
     drag.addEventListener('touchstart', start.bind(this), { passive: false })
-    drag.addEventListener('touchmove', move.bind(this), {passive: false })
+    drag.addEventListener('touchmove', move.bind(this), { passive: false })
     drag.addEventListener('touchend', end.bind(this), { passive: false })
   }
 
@@ -94,12 +101,12 @@ export default class Index extends Component {
 
   move (e) {
     const { 
-      loadFlag, maxOver, tStart, scrollFlag, child, haveData
+      loadFlag, maxOver, tStart, scrollFlag, child
     } = this
     const {
       pullRate
     } = this.props
-    if (loadFlag || !haveData) {
+    if (loadFlag) {
       // e.preventDefault()
       return
     }
@@ -193,12 +200,15 @@ export default class Index extends Component {
     const {
       dragY, dragTransition, refreshIcon, refreshTxt, refreshDeg, loadNextIcon, loadNextTxt, showToTop
     } = this.state
-    const { height, refresh, loadNext, children } = this.props
+    const {
+      height, refresh, loadNext, children, parentClass, refreshClass, loadNextClass, toTopClass
+    } = this.props
     const length =  children.props ? children.props.children.length: children.length
-    this.haveData = length > 0
     return (
       <div
         styleName="drag"
+        className={parentClass}
+        ref={e => this.drag = e}
         style={{ 
           height: height,
           transition: dragTransition,
@@ -207,18 +217,38 @@ export default class Index extends Component {
           WebkitTransform: `translate3d(0px, ${dragY}px, 0px)`
         }}
       >
-        <div styleName={`${'function' === typeof refresh ? '': 'hide'} refresh`}>
-          <span styleName={refreshIcon} style={{ transform: refreshDeg, WebkitTransform: refreshDeg }}></span>
+        <div
+          styleName={`${'function' === typeof refresh ? '': 'hide'} refresh`}
+          className={refreshClass}
+        >
+          <span
+            styleName={refreshIcon}
+            style={{ transform: refreshDeg, WebkitTransform: refreshDeg }} 
+          />
           <label>{refreshTxt}</label>
         </div>
-        <div styleName="items" style={{height: height}} onScroll={this.scroll.bind(this)}>
+        <div
+          styleName="items"
+          style={{height: height}}
+          ref={e => this.child = e}
+          onScroll={() => this.scroll()}
+        >
           {children}
-          <div styleName={`${'function' === typeof loadNext ? '': 'hide'} loadNext`}>
-            <span styleName={loadNextIcon}></span>
+          <div
+            styleName={`${'function' === typeof loadNext ? '': 'hide'} loadNext`}
+            className={loadNextClass}
+          >
+            <span styleName={loadNextIcon} />
             <label>{loadNextTxt}</label>
           </div>
         </div>
-        <div styleName={`${showToTop ? '': 'hide'} toTop`} onClick={this.toTop.bind(this)}>TOP</div>
+        <div
+          styleName={`${showToTop ? '': 'hide'} toTop`}
+          onClick={() => this.toTop()}
+          className={toTopClass}
+        >
+          TOP
+        </div>
       </div>
     )
   }

@@ -1,6 +1,6 @@
 {
   "name": "flywor-dragload",
-  "version": "1.1.23",
+  "version": "1.1.25",
   "description": "a react component supporting data list drag to load",
   "repository": {
     "type": "git",
@@ -22,7 +22,6 @@
     "dist": "rimraf publish/ && webpack --config ./dev/webpack.dist.js && npm start"
   },
   "dependencies": {
-    "flywor-dragload": "^1.1.22",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1"
