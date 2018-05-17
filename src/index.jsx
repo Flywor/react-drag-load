@@ -7,13 +7,13 @@ export default class Index extends Component {
     height: PropTypes.string.isRequired,
     refresh: PropTypes.func, // 下拉刷新方法(return Promise)
     loadNext: PropTypes.func, // 滚动加载方法(return Promise)
-    scrollRate: PropTypes.number, // 拉动速率
+    pullRate: PropTypes.number, // 拉动速率
   }
   static defaultProps = {
     height: '',
     refresh: null,
     loadNext: null,
-    scrollRate: 0.3
+    pullRate: 0.3
   }
   state = {
     dragY: 0,
@@ -97,7 +97,7 @@ export default class Index extends Component {
       loadFlag, maxOver, tStart, scrollFlag, child, haveData
     } = this
     const {
-      scrollRate
+      pullRate
     } = this.props
     if (loadFlag || !haveData) {
       // e.preventDefault()
@@ -107,7 +107,7 @@ export default class Index extends Component {
       if(!scrollFlag) {
         this.start(e)
       } else {
-        const tPosition = (tStart - e.touches[0].clientY) * scrollRate
+        const tPosition = (tStart - e.touches[0].clientY) * pullRate
         if (tPosition < 0) {
           e.preventDefault() // 阻止滚动条
           this.refreshFlag = maxOver < Math.abs(tPosition) // 达到临界值进入下拉刷新
@@ -206,13 +206,12 @@ export default class Index extends Component {
           transform: `translate3d(0px, ${dragY}px, 0px)`,
           WebkitTransform: `translate3d(0px, ${dragY}px, 0px)`
         }}
-        ref={e=> {this.drag = e}}
       >
         <div styleName={`${'function' === typeof refresh ? '': 'hide'} refresh`}>
           <span styleName={refreshIcon} style={{ transform: refreshDeg, WebkitTransform: refreshDeg }}></span>
           <label>{refreshTxt}</label>
         </div>
-        <div styleName="items" ref={e=> {this.child = e}} style={{height: height}} onScroll={this.scroll.bind(this)}>
+        <div styleName="items" style={{height: height}} onScroll={this.scroll.bind(this)}>
           {children}
           <div styleName={`${'function' === typeof loadNext ? '': 'hide'} loadNext`}>
             <span styleName={loadNextIcon}></span>
