@@ -15,7 +15,7 @@ import DragLoad from 'flywor-dragload';
 import 'flywor-dragload/index.css';
 // ...
 <DragLoad
-  height // Content height
+  height // screen height
   refresh // callback function, must be return Promise
   loadNext // callback function, must be return Promise
   pullRate // the pulling speed determines the speed and distance of the upper and lower pulls. default value is 0.3
