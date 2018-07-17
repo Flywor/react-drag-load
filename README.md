@@ -29,3 +29,5 @@ import 'flywor-dragload/index.css';
 // ...
 ```
 example: /debug/demo.jsx
+
+Issues: [DragLoad Issues](https://github.com/Flywor/DragLoad/issues)
