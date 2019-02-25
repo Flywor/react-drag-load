@@ -1,6 +1,6 @@
-# flywor-DragLoad
+# drag-load
 
-a react component supporting data list drag to load
+原生实现react可用的拉动加载组件
 
 ## Install
 
